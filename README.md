@@ -31,7 +31,7 @@ controls: keyboard (arrow keys)
 suggests, player has to jump over platforms and obstacles. This program will be made using pygame, a Python module designed for
 beginners to program games in Python.
   Our game will be a parody of the popular platformer, "Super Mario Brothers." Because of this, one of our main goals is to include
-gimmicks. For example, instead of mushrooms for powerups, our character may be collecting burgers instead. 
+gimmicks of the original game. For example, instead of mushrooms for powerups, our character may be collecting burgers instead. 
   Similarly to that game, our game will control the character with arrow keys on your keyboard while making our main menu screen
 controllable with both keyboard and mouse. Our game consists of 4 basic levels with a simple goal: get to the end of the map without
 dying. Things such as ledges and monsters will be able to kill you, though your character can
