@@ -1,1 +1,7 @@
-
+[PUT THIS IN INITIAL DESIGN]
+Our game consists of 4 basic levels with a simple goal: get to the end of the map without
+dying. Things such as ledges and monsters will be able to kill you, though your character can
+Our game consists of 4 basic levels with a simple goal: get to the end of the map without dying. Things such as ledges and monsters will be able to kill you, though your character can
+jump on these monsters to defeat them. Each level has its own obstacles and a time limit. Throughout these 4 levels, the player will
+have 5 lives. Each time you die, you lose a life. The final level will have a boss fight. You won't be able to defeat it using the same
+method as before. Instead, the character will be required to survive its attacks, get past it and press a button. The player rescues the
