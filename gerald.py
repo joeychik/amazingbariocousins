@@ -20,8 +20,9 @@ clock = pygame.time.Clock()
 
 #define classes
 class Player(pygame.sprite.Sprite):
-
-
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        
 
 #loop until user clicks close button
 done = False
@@ -32,7 +33,7 @@ while done == False:
         if event.type == pygame.QUIT:
             done = True
         if event.type == pygame.K_UP
-            
+
 
     #game logic
 
