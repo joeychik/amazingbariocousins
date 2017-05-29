@@ -2,7 +2,7 @@
 #a side-scrolling 2D platform-based game inspired by the classic video game Super Mario Brothers
 #Jason Yeung and Joey Chik
 #created: 2017-05-25
-#last edit: 2017-05-25
+#last edit: 2017-05-29
 
 #import necessary modules
 import pygame
@@ -22,14 +22,25 @@ clock = pygame.time.Clock()
 class Player(pygame.sprite.Sprite):
 
 
+
 #loop until user clicks close button
 done = False
 
 while done == False:
-
-
-    #check if close button is pressed
+    #event processing
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+        if event.type == pygame.K_UP
+            
+
+    #game logic
+
+    #graphics
+
+    #update display
+    pygame.display.flip()
+
+    #limit framerate
+    clock.tick(40)
 pygame.quit()
