@@ -1,4 +1,4 @@
-#the#The "Amazing Bario Cousins" program
+#The "Amazing Bario Cousins" program
 #a side-scrolling 2D platform-based game inspired by the classic video game Super Mario Brothers
 #Jason Yeung and Joey Chik
 #created: 2017-05-25
@@ -26,12 +26,10 @@ class Player(pygame.sprite.Sprite):
 done = False
 
 while done == False:
-    #event processing
+
+
+    #check if close button is pressed
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-    #game logic
-
-    #drawing graphics
-
 pygame.quit()
