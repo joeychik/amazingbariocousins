@@ -18,12 +18,6 @@ pygame.display.set_caption('Amazing Bario Cousins')
 #initialize clock
 clock = pygame.time.Clock()
 
-#define classes
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        
-
 #loop until user clicks close button
 done = False
 
