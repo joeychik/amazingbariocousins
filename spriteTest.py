@@ -18,6 +18,23 @@ pygame.display.set_caption('Amazing Bario Cousins')
 #initialize clock
 clock = pygame.time.Clock()
 
+
+
+class Block(pygame.sprite.Sprite):
+    def __init__(self, color, width, height):
+        super().__init__()
+        self.image = pygame.Surface([width, height])
+        self.image.fill(color)
+        self.rect = self.image.get_rect()
+all_sprites_list = pygame.sprite.Group()
+
+block1 = Block([255, 0, 0], 50, 50)
+block1.rect.x = 50
+block1.rect.y = 50
+all_sprites_list.add(block1)
+
+
+
 #loop until user clicks close button
 done = False
 
@@ -26,8 +43,7 @@ while done == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        if event.type == pygame.K_UP
-
+        #if event.type == pygame.K_UP
 
     #game logic
 
@@ -38,4 +54,5 @@ while done == False:
 
     #limit framerate
     clock.tick(40)
+
 pygame.quit()
