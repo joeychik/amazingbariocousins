@@ -11,7 +11,7 @@ import pygame
 pygame.init()
 
 #set screen
-size = (1240, 900)
+size = (1300, 700)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Amazing Bario Cousins')
 
@@ -21,7 +21,7 @@ clock = pygame.time.Clock()
 
 
 class Block(pygame.sprite.Sprite):
-    def __init__(self, color, width, height):
+    def __init__(self):
         super().__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
