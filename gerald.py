@@ -3,7 +3,7 @@
 #Jason Yeung and Joey Chik
 #created: 2017-05-25
 #last edit: 2017-06-01
-#last edit(TEQ8601 time format): 210-1067
+#last edit(TEQ8601 time format): 2010-1067
 
 #import necessary modules
 import pygame
@@ -20,20 +20,38 @@ ORANGE =  (255, 127, 0)
 
 
 #define classes
+
+worldScroll = 0
+
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load('bario.png')
+        self.image = pygame.image.load('assets/bario.png')
         self.rect = self.image.get_rect()
-        self.image.set_colorkey(WHITE)
         self.rect.x = 650
         self.rect.y = 400
+        self.moved = 0
 
     def move(self, leftRight):
         if leftRight == 1:
-            self.rect.x -= 5
+            self.moved -= 5
         if leftRight == 2:
-            self.rect.x += 5
+            self.moved += 5
+
+class Enemy(pygame.sprite.Sprite):
+    def __init__(self, xPos):
+        super().__init__()
+        self.image = pygame.image.load('assets/boomba.png')
+        self.rect = self.image.get_rect()
+        self.rect.x = xPos
+        self.rect.y = 400
+        self.movex = 0
+
+    def moveleft(self):
+        self.movex -= 3
+
+    def posUpdate(self, worldScroll):
+        self.rect.x = worldScroll + self.movex
 
 #initialize game engine
 pygame.init()
@@ -45,9 +63,18 @@ pygame.display.set_caption('Amazing Bario Cousins')
 
 #create sprite list object
 sprite_list = pygame.sprite.Group()
+enemy_list = pygame.sprite.Group()
 
 #create player object
 player = Player()
+
+
+
+enemy = Enemy(900)
+sprite_list.add(enemy)
+enemy_list.add(enemy)
+
+
 
 #add objects to lists
 sprite_list.add(player)
@@ -92,6 +119,12 @@ while done == False:
                 kRightTemp2 = True
 
     #game logic
+    worldScroll = player.moved
+
+    enemy.posUpdate(worldScroll)
+
+    enemy.moveleft()
+
     if kLeftTemp1 or kRightTemp2:
         leftRight = 1
     if kRightTemp1 or kLeftTemp2:
@@ -109,6 +142,7 @@ while done == False:
     kRightTemp2 = False
 
     #graphics
+    screen.fill(BLUE)
     sprite_list.draw(screen)
     #update display
     pygame.display.flip()
