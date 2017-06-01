@@ -13,6 +13,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED =  (255, 0, 0)
 BLUE = (0, 0, 255)
+LIGHT_BLUE = (146, 144, 255)
 YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 PURPLE = (255, 0, 255)
@@ -33,9 +34,9 @@ class Player(pygame.sprite.Sprite):
         self.moved = 0
 
     def move(self, leftRight):
-        if leftRight == 1:
-            self.moved -= 5
         if leftRight == 2:
+            self.moved -= 5
+        if leftRight == 1:
             self.moved += 5
 
 class Enemy(pygame.sprite.Sprite):
@@ -53,6 +54,12 @@ class Enemy(pygame.sprite.Sprite):
     def posUpdate(self, worldScroll):
         self.rect.x = worldScroll + self.movex
 
+    def update(self, worldScroll):
+        #self.moveleft()
+        self.posUpdate(worldScroll)
+        if self.rect.x == -150:
+            self.kill()
+
 #initialize game engine
 pygame.init()
 
@@ -67,17 +74,12 @@ enemy_list = pygame.sprite.Group()
 
 #create player object
 player = Player()
+sprite_list.add(player)
 
-
-
+#create enemy objects
 enemy = Enemy(900)
 sprite_list.add(enemy)
 enemy_list.add(enemy)
-
-
-
-#add objects to lists
-sprite_list.add(player)
 
 #initialize clock
 clock = pygame.time.Clock()
@@ -85,14 +87,17 @@ clock = pygame.time.Clock()
 #initialize necessary variables
 kLeft = False
 kRight = False
+kUp = False
 
 leftRight = 0
 
 kLeftTemp1 = False
 kRightTemp1 = False
+kUpTemp1 = False
 
 kLeftTemp2 = False
 kRightTemp2 = False
+kUpTemp2 = False
 
 #loop until user clicks close button
 done = False
@@ -103,27 +108,32 @@ while done == False:
         if event.type == pygame.QUIT:
             done = True
         if not hasattr(event, 'key'): continue
+        #the kXXXTemp variables represent the key being pressed and released
+        #the kXXX variables will stay true as long as the key is being held down
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 kLeft = True
                 kLeftTemp1 = True
-            elif event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT:
                 kRight = True
                 kRightTemp1 = True
+            if event.key == pygame.K_UP:
+                kUp = True
+                kUpTemp1 = True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 kLeft = False
                 kLeftTemp2 = True
-            elif event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT:
                 kRight = False
                 kRightTemp2 = True
+            if event.key == pygame.K_UP:
+                kUp = False
+                kUpTemp2 = False
 
     #game logic
+    #where everything should be relative to the player
     worldScroll = player.moved
-
-    enemy.posUpdate(worldScroll)
-
-    enemy.moveleft()
 
     if kLeftTemp1 or kRightTemp2:
         leftRight = 1
@@ -135,6 +145,10 @@ while done == False:
     if kLeft or kRight:
         player.move(leftRight)
 
+    #update position of everything that moved
+    enemy_list.update(worldScroll)
+
+    #reset temporary variables
     kLeftTemp1 = False
     kRightTemp1 = False
 
@@ -142,8 +156,9 @@ while done == False:
     kRightTemp2 = False
 
     #graphics
-    screen.fill(BLUE)
+    screen.fill(LIGHT_BLUE)
     sprite_list.draw(screen)
+
     #update display
     pygame.display.flip()
 
