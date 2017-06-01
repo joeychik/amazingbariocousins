@@ -37,5 +37,5 @@ while done == False:
     pygame.display.flip()
 
     #limit framerate
-    clock.tick(40)
+    clock.tick(60)
 pygame.quit()
