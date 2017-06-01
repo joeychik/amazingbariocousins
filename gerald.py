@@ -22,7 +22,7 @@ ORANGE =  (255, 127, 0)
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        #self.image = pygame.image.load("bario.png").convert()
+        self.image = pygame.image.load('bario.png')
         self.rect = self.image.get_rect()
         self.image.set_colorkey(WHITE)
         self.rect.x = 650
@@ -51,6 +51,9 @@ sprite_list = pygame.sprite.Group()
 #create player object
 player = Player()
 
+#add objects to lists
+sprite_list.add(player)
+
 #initialize clock
 clock = pygame.time.Clock()
 
@@ -72,7 +75,7 @@ while done == False:
     #game logic
 
     #graphics
-    all_sprites_list.draw(screen)
+    sprite_list.draw(screen)
     #update display
     pygame.display.flip()
 
