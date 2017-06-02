@@ -25,15 +25,15 @@ clock = pygame.time.Clock()
 class Text1(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('text1.png')
+       self.image = pygame.image.load ('assets/text1.png')
        self.rect = self.image.get_rect()
        self.rect.x = 325
        self.rect.y = 400
-       
+
 text1 = Text1()
 
 # Set a Background
-bg = pygame.image.load ('mainmenu.png')
+bg = pygame.image.load ('assets/mainmenu.png')
 
 # Display Text
 screen.blit (bg,[0,0],None,0)
@@ -42,14 +42,11 @@ screen.blit (text1.image, text1.rect,None,0)
 # Display Graphics
 pygame.display.flip()
 
-# Flashing Text
-frame = 0
-
 # Closing the Program
 done = False
 while done == False:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            done = True        
+            done = True
     clock.tick(60)
 pygame.quit()
