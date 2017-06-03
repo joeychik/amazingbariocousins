@@ -7,6 +7,7 @@
 
 #import necessary modules
 import pygame
+from classes import *
 
 #define colors
 WHITE = (255, 255, 255)
@@ -18,47 +19,6 @@ YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 PURPLE = (255, 0, 255)
 ORANGE =  (255, 127, 0)
-
-
-#define classes
-
-worldScroll = 0
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load('assets/bario.png')
-        self.rect = self.image.get_rect()
-        self.rect.x = 650
-        self.rect.y = 400
-        self.moved = 0
-
-    def move(self, leftRight):
-        if leftRight == 2:
-            self.moved -= 5
-        if leftRight == 1:
-            self.moved += 5
-
-class Enemy(pygame.sprite.Sprite):
-    def __init__(self, xPos):
-        super().__init__()
-        self.image = pygame.image.load('assets/boomba.png')
-        self.rect = self.image.get_rect()
-        self.rect.x = xPos
-        self.rect.y = 400
-        self.movex = 0
-
-    def moveleft(self):
-        self.movex -= 3
-
-    def posUpdate(self, worldScroll):
-        self.rect.x = worldScroll + self.movex
-
-    def update(self, worldScroll):
-        #self.moveleft()
-        self.posUpdate(worldScroll)
-        if self.rect.x == -150:
-            self.kill()
 
 #initialize game engine
 pygame.init()
@@ -99,6 +59,8 @@ kLeftTemp2 = False
 kRightTemp2 = False
 kUpTemp2 = False
 
+pause = False
+
 #loop until user clicks close button
 done = False
 
@@ -120,6 +82,8 @@ while done == False:
             if event.key == pygame.K_UP:
                 kUp = True
                 kUpTemp1 = True
+            if event.key == pygame.K_p:
+                pause == True
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 kLeft = False
@@ -135,6 +99,18 @@ while done == False:
     #where everything should be relative to the player
     worldScroll = player.moved
 
+    #determine direction player is facing
+
+    #pause loop
+    if pause:
+        pauseLoop = True
+        #insert pause screen start here
+        while pauseLoop:
+            for event in pygame.event.get():
+                if not event.type  == pygame.KEYDOWN: continue
+                if event.key == pygame.K_p: pauseLoop = False
+        #insert pause screen end here
+
     if kLeftTemp1 or kRightTemp2:
         leftRight = 1
     if kRightTemp1 or kLeftTemp2:
@@ -145,6 +121,8 @@ while done == False:
     if kLeft or kRight:
         player.move(leftRight)
 
+
+
     #update position of everything that moved
     enemy_list.update(worldScroll)
 
@@ -154,6 +132,8 @@ while done == False:
 
     kLeftTemp2 = False
     kRightTemp2 = False
+
+    pause = False
 
     #graphics
     screen.fill(LIGHT_BLUE)
