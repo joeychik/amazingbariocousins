@@ -49,8 +49,6 @@ kLeft = False
 kRight = False
 kUp = False
 
-leftRight = 0
-
 kLeftTemp1 = False
 kRightTemp1 = False
 kUpTemp1 = False
@@ -99,29 +97,16 @@ while done == False:
     #where everything should be relative to the player
     worldScroll = player.moved
 
-    #determine direction player is facing
-
     #pause loop
     if pause:
-        pauseLoop = True
-        #insert pause screen start here
-        while pauseLoop:
-            for event in pygame.event.get():
-                if not event.type  == pygame.KEYDOWN: continue
-                if event.key == pygame.K_p: pauseLoop = False
-        #insert pause screen end here
-
-    if kLeftTemp1 or kRightTemp2:
-        leftRight = 1
-    if kRightTemp1 or kLeftTemp2:
-        leftRight = 2
-    if not(kLeft or kRight):
-        leftRight = 0
-
+        Pause_screen()
+    #move player
     if kLeft or kRight:
-        player.move(leftRight)
+        player.move(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2)
+    else:
+        player.standSprite()
 
-
+    player.jump(kUp)
 
     #update position of everything that moved
     enemy_list.update(worldScroll)
@@ -137,6 +122,7 @@ while done == False:
 
     #graphics
     screen.fill(LIGHT_BLUE)
+
     sprite_list.draw(screen)
 
     #update display

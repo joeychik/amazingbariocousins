@@ -16,12 +16,64 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = 650
         self.rect.y = 400
         self.moved = 0
+        self.leftRight = 0
+        self.jumping = False
+        self.runCycleRight = 0
+        self.runCycleLeft = 0
+        self.falling = False
+        self.midair = False
 
-    def move(self, leftRight):
-        if leftRight == 2:
-            self.moved -= 5
-        if leftRight == 1:
-            self.moved += 5
+    def move(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2):
+        if kLeftTemp1 or kRightTemp2:
+            self.leftRight = 1
+        if kRightTemp1 or kLeftTemp2:
+            self.leftRight = 2
+        if not(kLeft or kRight):
+            self.leftRight = 0
+        if self.leftRight == 2:
+            if self.runCycleRight <= 9:
+                self.runCycleRight += 1
+            else:
+                self.runCycleRight = 1
+            if 1 <= self.runCycleRight <= 5:
+                self.image = pygame.image.load('assets/bariowalk1.png')
+            elif 6 <= self.runCycleRight <= 10:
+                self.image = pygame.image.load('assets/bariowalk2.png')
+            self.moved -= 10
+        if self.leftRight == 1:
+            if self.runCycleLeft <= 9:
+                self.runCycleLeft += 1
+            else:
+                self.runCycleLeft = 1
+            if 1 <= self.runCycleLeft <= 5:
+                self.image = pygame.image.load('assets/barioflipwalk1.png')
+            elif 6 <= self.runCycleLeft <= 10:
+                self.image = pygame.image.load('assets/barioflipwalk2.png')
+            self.moved += 10
+
+    def standSprite(self):
+        if self.leftRight == 1:
+            self.image = pygame.image.load('assets/barioflip.png')
+        elif self.leftRight == 2:
+            self.image = pygame.image.load('assets/bario.png')
+        self.runCycleRight = 0
+        self.runCycleLeft = 0
+
+    def jump(self, kUp):
+        if self.rect.y <= 100:
+            self.falling = True
+        if kUp and not self.falling:
+            self.rect.y -= 10
+        if not kUp:
+            self.falling = True
+        if self.rect.y >= 400:
+            self.falling = False
+        if self.falling:
+            self.rect.y += 10
+        if self.rect.y < 400:
+            self.standSprite()
+            self.midair = True
+
 
 #enemy class
 class Enemy(pygame.sprite.Sprite):
@@ -41,10 +93,28 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = worldScroll + self.movex
 
     def update(self, worldScroll):
-        #self.moveleft()
+        self.moveleft()
         self.posUpdate(worldScroll)
         if self.rect.x == -300:
             self.kill()
 
+
+''' finish this later
+#level platform sprite
+class Platform(pygame.sprite.Sprite):
+    def __init__(self, xPos):
+
+
+'''
+
+
 #pause screen
-#class pause_screen
+class Pause_screen():
+    def __init__(self):
+        self.image = pygame.image.load('assets/pause.png')
+        self.runLoop = True
+        screen.blit(self.image, [0, 0])
+        while self.runLoop:
+            for event in pygame.event.get():
+                if not event.type  == pygame.KEYDOWN: continue
+                if event.key == pygame.K_p: self.runLoop = False
