@@ -6,6 +6,11 @@ import pygame
 #variables
 worldScroll = 0
 
+#create sprite list object
+sprite_list = pygame.sprite.Group()
+enemy_list = pygame.sprite.Group()
+obstacle_list = pygame.sprite.Group()
+
 #define classes
 #player class
 class Player(pygame.sprite.Sprite):
@@ -112,9 +117,19 @@ class Platform(pygame.sprite.Sprite):
         super().__init__()
         self.image = pygame.image.load('assets/bricktemplate.png')
         self.rect = self.image.get_rect()
+        self.rect.x = -800
+        self.rect.y = 528
+
+    def spawnNew(self):
+        if self.rect.x < -1600:
+            platform = Platform()
+            obstacle_list.add(platform)
+            sprite_list.add(platform)
+            self.kill()
 
     def update(self, worldScroll):
         self.rect.x = worldScroll - 800
+        self.spawnNew()
 
 
 #pause screen

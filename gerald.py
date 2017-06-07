@@ -28,10 +28,6 @@ size = (1300, 700)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Amazing Bario Cousins')
 
-#create sprite list object
-sprite_list = pygame.sprite.Group()
-enemy_list = pygame.sprite.Group()
-
 #create player object
 player = Player()
 sprite_list.add(player)
@@ -40,6 +36,11 @@ sprite_list.add(player)
 enemy = Enemy(900)
 sprite_list.add(enemy)
 enemy_list.add(enemy)
+
+#create platform object
+platform = Platform()
+sprite_list.add(platform)
+obstacle_list.add(platform)
 
 #initialize clock
 clock = pygame.time.Clock()
@@ -110,6 +111,7 @@ while done == False:
 
     #update position of everything that moved
     enemy_list.update(worldScroll)
+    obstacle_list.update(worldScroll)
 
     #reset temporary variables
     kLeftTemp1 = False
