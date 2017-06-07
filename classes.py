@@ -24,32 +24,39 @@ class Player(pygame.sprite.Sprite):
         self.midair = False
 
     def move(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2):
-        if kLeftTemp1 or kRightTemp2:
-            self.leftRight = 1
-        if kRightTemp1 or kLeftTemp2:
-            self.leftRight = 2
-        if not(kLeft or kRight):
-            self.leftRight = 0
-        if self.leftRight == 2:
-            if self.runCycleRight <= 9:
-                self.runCycleRight += 1
-            else:
-                self.runCycleRight = 1
-            if 1 <= self.runCycleRight <= 5:
-                self.image = pygame.image.load('assets/bariowalk1.png')
-            elif 6 <= self.runCycleRight <= 10:
-                self.image = pygame.image.load('assets/bariowalk2.png')
-            self.moved -= 10
-        if self.leftRight == 1:
-            if self.runCycleLeft <= 9:
-                self.runCycleLeft += 1
-            else:
-                self.runCycleLeft = 1
-            if 1 <= self.runCycleLeft <= 5:
-                self.image = pygame.image.load('assets/barioflipwalk1.png')
-            elif 6 <= self.runCycleLeft <= 10:
-                self.image = pygame.image.load('assets/barioflipwalk2.png')
-            self.moved += 10
+        if self.moved <= 0:
+            if kLeftTemp1 or kRightTemp2:
+                self.leftRight = 1
+            if kRightTemp1 or kLeftTemp2:
+                self.leftRight = 2
+            if not(kLeft or kRight):
+                self.leftRight = 0
+            if self.leftRight == 2:
+                if self.runCycleRight <= 9:
+                    self.runCycleRight += 1
+                else:
+                    self.runCycleRight = 1
+                if 1 <= self.runCycleRight <= 5:
+                    self.image = pygame.image.load('assets/bariowalk1.png')
+                elif 6 <= self.runCycleRight <= 10:
+                    self.image = pygame.image.load('assets/bariowalk2.png')
+                if self.moved == 0:
+                    self.image = pygame.image.load('assets/barioflip.png')
+                self.moved -= 10
+            if self.leftRight == 1:
+                if self.runCycleLeft <= 9:
+                    self.runCycleLeft += 1
+                else:
+                    self.runCycleLeft = 1
+                if 1 <= self.runCycleLeft <= 5:
+                    self.image = pygame.image.load('assets/barioflipwalk1.png')
+                elif 6 <= self.runCycleLeft <= 10:
+                    self.image = pygame.image.load('assets/barioflipwalk2.png')
+                if self.moved == 0:
+                    self.image = pygame.image.load('assets/barioflip.png')
+                self.moved += 10
+        if self.moved >= 0:
+            self.moved = 0
 
     def standSprite(self):
         if self.leftRight == 1:
@@ -99,13 +106,15 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
 
 
-''' finish this later
 #level platform sprite
 class Platform(pygame.sprite.Sprite):
-    def __init__(self, xPos):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load('assets/bricktemplate.png')
+        self.rect = self.image.get_rect()
 
-
-'''
+    def update(self, worldScroll):
+        self.rect.x = worldScroll - 200
 
 
 #pause screen
