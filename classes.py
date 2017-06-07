@@ -114,7 +114,7 @@ class Platform(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
     def update(self, worldScroll):
-        self.rect.x = worldScroll - 200
+        self.rect.x = worldScroll - 800
 
 
 #pause screen
