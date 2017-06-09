@@ -2,8 +2,7 @@
 #a side-scrolling 2D platform-based game inspired by the classic video game Super Mario Brothers
 #Jason Yeung and Joey Chik
 #created: 2017-05-25
-#last edit: 2017-06-01
-#last edit(TEQ8601 time format): 2010-1067
+#last edit: 2017-06-08
 
 #import necessary modules
 import pygame
@@ -27,20 +26,6 @@ pygame.init()
 size = (1300, 700)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption('Amazing Bario Cousins')
-
-#create player object
-player = Player()
-sprite_list.add(player)
-
-#create enemy objects
-enemy = Enemy(900)
-sprite_list.add(enemy)
-enemy_list.add(enemy)
-
-#create platform object
-platform = Platform()
-sprite_list.add(platform)
-obstacle_list.add(platform)
 
 #initialize clock
 clock = pygame.time.Clock()
@@ -95,19 +80,15 @@ while done == False:
                 kUpTemp2 = False
 
     #game logic
-    #where everything should be relative to the player
+
     worldScroll = player.moved
+
+    #move player
+    playergroup.update(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2, kUp, obstacle_list)
 
     #pause loop
     if pause:
         Pause_screen()
-    #move player
-    if kLeft or kRight:
-        player.move(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2)
-    else:
-        player.standSprite()
-
-    player.jump(kUp)
 
     #update position of everything that moved
     enemy_list.update(worldScroll)

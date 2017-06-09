@@ -81,7 +81,7 @@ class Exit(pygame.sprite.Sprite):
        self.rect.x = 559
        self.rect.y = 483
 '''
-       
+
 startUp = StartUp()
 mainMenu = MainMenu()
 play = Play()
@@ -90,15 +90,17 @@ creditScreen = Credits()
 close = Exit()'''
 
 spriteList = pygame.sprite.Group()
+startMenu = pygame.sprite.Group()
+
 spriteList.add(play)
 spriteList.add(mainMenu)
+startMenu.add(startUp)
 
 # Set a Background
 bg = pygame.image.load ('assets/mainmenu.png')
 
 # Display Text
 screen.blit (bg,[0,0],None,0)
-screen.blit (startUp.image, startUp.rect,None,0)
 
 # Display Graphics
 pygame.display.flip()

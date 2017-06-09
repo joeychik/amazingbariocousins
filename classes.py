@@ -10,6 +10,7 @@ worldScroll = 0
 sprite_list = pygame.sprite.Group()
 enemy_list = pygame.sprite.Group()
 obstacle_list = pygame.sprite.Group()
+playergroup = pygame.sprite.GroupSingle()
 
 #define classes
 #player class
@@ -71,7 +72,7 @@ class Player(pygame.sprite.Sprite):
         self.runCycleRight = 0
         self.runCycleLeft = 0
 
-    def jump(self, kUp):
+    def jump(self, kUp, obstacle_list):
         if self.rect.y <= 100:
             self.falling = True
         if kUp and not self.falling:
@@ -82,10 +83,23 @@ class Player(pygame.sprite.Sprite):
             self.falling = False
         if self.falling:
             self.rect.y += 10
-        if self.rect.y < 400:
-            self.standSprite()
+        hitList = pygame.sprite.spritecollide(self, obstacle_list, False)
+        hit = False
+        for i in hitList:
+            hit = True
+        if not hit:
             self.midair = True
+        else:
+            self.midair = False
+        if self.midair:
+            self.standSprite()
 
+    def update(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2, kUp, obstacle_list):
+        if kLeft or kRight:
+            player.move(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2)
+        else:
+            player.standSprite()
+        self.jump(kUp, obstacle_list)
 
 #enemy class
 class Enemy(pygame.sprite.Sprite):
@@ -113,23 +127,24 @@ class Enemy(pygame.sprite.Sprite):
 
 #level platform sprite
 class Platform(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self, startPos):
         super().__init__()
         self.image = pygame.image.load('assets/bricktemplate.png')
         self.rect = self.image.get_rect()
         self.rect.x = -800
         self.rect.y = 528
+        self.startPos = startPos
 
-    def spawnNew(self):
-        if self.rect.x < -1600:
-            platform = Platform()
+    def spawnNew(self, worldScroll):
+        if worldScroll - self.startPos < -2048:
+            platform = Platform(self.startPos - 2048)
             obstacle_list.add(platform)
             sprite_list.add(platform)
             self.kill()
 
     def update(self, worldScroll):
-        self.rect.x = worldScroll - 800
-        self.spawnNew()
+        self.rect.x = worldScroll - self.startPos
+        self.spawnNew(worldScroll)
 
 
 #pause screen
@@ -142,3 +157,18 @@ class Pause_screen():
             for event in pygame.event.get():
                 if not event.type  == pygame.KEYDOWN: continue
                 if event.key == pygame.K_p: self.runLoop = False
+
+#create player object
+player = Player()
+sprite_list.add(player)
+playergroup.add(player)
+
+#create enemy objects
+enemy = Enemy(900)
+sprite_list.add(enemy)
+enemy_list.add(enemy)
+
+#create platform object
+platform = Platform(0)
+sprite_list.add(platform)
+obstacle_list.add(platform)
