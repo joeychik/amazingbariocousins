@@ -22,7 +22,7 @@ screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 
 # Sprite Thing
-class StartUp(pygame.sprite.Sprite):
+class Play(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
        self.image = pygame.image.load ('assets/text/presskey.png')
@@ -38,23 +38,24 @@ class MainMenu(pygame.sprite.Sprite):
        self.rect.x = 510
        self.rect.y = 350
 
-class Play(pygame.sprite.Sprite):
+class MainMenuArrows(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('assets/text/play.png')
+       self.image = pygame.image.load ('assets/text/nohighscore.png')
        self.rect = self.image.get_rect()
-       self.rect.x = 510
+       self.rect.x = 465
        self.rect.y = 350
 
-    def changeArrow(self, whichButton):
-        if whichButton == 1:
+    def update(self, whichButton):
+       if whichButton % 4 == 0:
             self.image = pygame.image.load('assets/text/playarrow.png')
-        elif whichButton == 2:
+       elif whichButton % 4 == 1:
             self.image = pygame.image.load('assets/text/instructionarrow.png')
-        elif whichButton == 3:
+       elif whichButton % 4 == 2:
             self.image = pygame.image.load('assets/text/creditsarrow.png')
-        elif whichButton == 4:
+       elif whichButton % 4 == 3:
             self.image = pygame.image.load('assets/text/exitarrow.png')
+<<<<<<< HEAD
 
 '''
 class Instructions(pygame.sprite.Sprite):
@@ -83,25 +84,37 @@ class Exit(pygame.sprite.Sprite):
 '''
 
 startUp = StartUp()
+=======
+       
+mainMenuArrows = MainMenuArrows()
+>>>>>>> c9cdffe6a8a686dc9a0ab6183542cee1d858b6ad
 mainMenu = MainMenu()
 play = Play()
-'''instructions = Instructions()
-creditScreen = Credits()
-close = Exit()'''
 
+<<<<<<< HEAD
 spriteList = pygame.sprite.Group()
 startMenu = pygame.sprite.Group()
 
 spriteList.add(play)
 spriteList.add(mainMenu)
 startMenu.add(startUp)
+=======
+menu = pygame.sprite.Group()
+menu.add(mainMenu)
+menu.add(mainMenuArrows)
+playGroup = pygame.sprite.GroupSingle()
+playGroup.add(play)
+>>>>>>> c9cdffe6a8a686dc9a0ab6183542cee1d858b6ad
 
 # Set a Background
 bg = pygame.image.load ('assets/mainmenu.png')
 
+<<<<<<< HEAD
 # Display Text
 screen.blit (bg,[0,0],None,0)
 
+=======
+>>>>>>> c9cdffe6a8a686dc9a0ab6183542cee1d858b6ad
 # Display Graphics
 pygame.display.flip()
 
@@ -110,9 +123,10 @@ done = False
 keyPressed = False
 menuScreen = False
 whichButton = 1
+keyDown = False
 
 # Game Loop
-while done == False:
+while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
@@ -126,12 +140,20 @@ while done == False:
 # Main Menu
     if menuScreen == True:
         pygame.draw.rect(screen,sky,[340,400,615,25],0)
-        screen.blit (mainMenu.image, mainMenu.rect,None,0)
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_DOWN:
-                whichButton += 1
-        play.changeArrow(whichButton)
-    spriteList.draw(screen)
+            if keyDown == False:
+                if event.key == pygame.K_DOWN:
+                    whichButton += 1
+                    keyDown = True
+                if event.key == pygame.K_UP:
+                    whichButton -= 1
+                    keyDown = True
+        if event.type == pygame.KEYUP:
+            keyDown = False
+        menu.update(whichButton)
+        menu.draw(screen)
+    else:
+        playGroup.draw(screen)
     pygame.display.flip()
     screen.blit(bg, [0, 0])
     clock.tick(60)
