@@ -13,7 +13,7 @@ screen = pygame.display.set_mode(size)
 # Clock
 clock = pygame.time.Clock()
 
-# Sprite Thing
+# Classes and Sprites
 class Play(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
@@ -80,6 +80,7 @@ class Instructions(pygame.sprite.Sprite):
         elif slide % 3 == 2:
             self.image = pygame.image.load('assets/instruction3.png')
 
+# Initialize Sprites
 instructions = Instructions()
 credit = Credits()
 mainMenuArrows = MainMenuArrows()
@@ -87,12 +88,14 @@ mainMenu = MainMenu()
 play = Play()
 selection = CharSelect()
 
+# Create Sprite Groups
 playGroup = pygame.sprite.GroupSingle()
 creditGroup = pygame.sprite.GroupSingle()
 selectGroup = pygame.sprite.GroupSingle()
 instruction = pygame.sprite.Group()
 menu = pygame.sprite.Group()
 
+# Adding Sprites to Sprite Groups
 menu.add(mainMenu) #menu bg
 menu.add(mainMenuArrows) #arrows
 playGroup.add(play) #press any key
@@ -100,13 +103,13 @@ creditGroup.add(credit)
 instruction.add(instructions)
 selectGroup.add (selection)
 
-# Backgrounds
+# Background
 bg = pygame.image.load ('assets/mainmenu.png')
 
 # Display Graphics
 pygame.display.flip()
 
-# Boolean Stuff
+# Boolean/Integer Variables
 charScreen = False
 instructionScreen = False
 creditScreen = False
@@ -197,7 +200,7 @@ while not done:
                 if event.key == pygame.K_RETURN:
                     done = True #PUT UR THINGY HERE
                     
-# Stuff
+# Refreshes Background After Every Loop
     pygame.display.flip()
     screen.blit(bg, [0, 0])
     clock.tick(60)
