@@ -89,6 +89,7 @@ def MainMenu(screen, clock):
         if not keyPressed:
             screen.blit(play.image, [play.rect.x, play.rect.y])
             if event.type == pygame.KEYDOWN:
+                pygame.event.clear()
                 keyPressed = True
                 menuScreen = True
         if menuScreen:

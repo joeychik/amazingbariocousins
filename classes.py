@@ -169,15 +169,22 @@ class Platform(pygame.sprite.Sprite):
         self.deSpawn()
 
 #pause screen
+def unpause():
+    global pause
+    pause = False
+
 def Pause_screen(screen, clock):
     pygame.event.clear()
     image = pygame.image.load('assets/pause.png')
-    screen.blit(image, [0, 0])
     while pause:
+        screen.blit(image, [0, 0])
+        
         for event in pygame.event.get():
-            if event.key == pygame.K_c or event.key == pygame.K_p: pause = False
+            if event.key == pygame.K_c: unpause()
             #if event.key == pygame.K_m:
-    clock.tick(60)
+
+        pygame.display.flip()
+        clock.tick(60)
 
 #level super class
 class Level():

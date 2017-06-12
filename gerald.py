@@ -17,6 +17,8 @@ def mainProgLoop():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Amazing Bario Cousins')
 
+    pygame.mouse.set_visible(False)
+
     level_list = []
     level_list.append(Level_01(player, screen))
     level_list.append(Level_02(player, screen))
@@ -69,7 +71,18 @@ def mainProgLoop():
                     player.jump()
                 if event.key == pygame.K_p:
                     pause = True
-                    Pause_screen(screen, clock)
+
+                    pygame.event.clear()
+                    image = pygame.image.load('assets/pause.png')
+                    while pause:
+                        screen.blit(image, [0, 0])
+                        for event in pygame.event.get():
+                            if event.key == pygame.K_c: pause = False
+                            #if event.key == pygame.K_m:
+
+                        pygame.display.flip()
+                        clock.tick(60)
+
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
                     kLeft = False
