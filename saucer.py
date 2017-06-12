@@ -56,6 +56,14 @@ class Credits(pygame.sprite.Sprite):
        self.rect.x = 450
        self.rect.y = 310
 
+class CharSelect(pygame.sprite.Sprite):
+    def __init__(self):
+       pygame.sprite.Sprite.__init__(self)
+       self.image = pygame.image.load ('assets/charactersel.png')
+       self.rect = self.image.get_rect()
+       self.rect.x = 0
+       self.rect.y = 0
+
 class Instructions(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
@@ -77,9 +85,11 @@ credit = Credits()
 mainMenuArrows = MainMenuArrows()
 mainMenu = MainMenu()
 play = Play()
+selection = CharSelect()
 
 playGroup = pygame.sprite.GroupSingle()
 creditGroup = pygame.sprite.GroupSingle()
+selectGroup = pygame.sprite.GroupSingle()
 instruction = pygame.sprite.Group()
 menu = pygame.sprite.Group()
 
@@ -88,6 +98,7 @@ menu.add(mainMenuArrows) #arrows
 playGroup.add(play) #press any key
 creditGroup.add(credit)
 instruction.add(instructions)
+selectGroup.add (selection)
 
 # Backgrounds
 bg = pygame.image.load ('assets/mainmenu.png')
@@ -96,6 +107,7 @@ bg = pygame.image.load ('assets/mainmenu.png')
 pygame.display.flip()
 
 # Boolean Stuff
+charScreen = False
 instructionScreen = False
 creditScreen = False
 done = False
@@ -130,11 +142,12 @@ while not done:
                     if whichButton % 4 == 3:
                         done = True
                     if whichButton % 4 == 2:
-                        menuScreen = False
                         creditScreen = True
                     if whichButton % 4 == 1:
-                        menuScreen = False
                         instructionScreen = True
+                    if whichButton % 4 == 0:
+                        charScreen = True
+                    menuScreen = False
                 keyDown = True
         if event.type == pygame.KEYUP:
             keyDown = False
@@ -170,6 +183,16 @@ while not done:
             keyDown = False
         instruction.update(slide)
 
+# Character Screen
+    if charScreen:
+        selectGroup.draw(screen)
+        if event.type == pygame.KEYUP:
+            keyDown = False
+        if not keyDown:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    charScreen = False
+                    menuScreen = True
                     
 # Stuff
     pygame.display.flip()
