@@ -33,111 +33,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 650
         self.rect.y = 400
-        self.moved = 0
-        self.change_x = 0
-        self.change_y = 0
-        self.leftRight = 0
-        self.jumping = False
-        self.runCycleRight = 0
-        self.runCycleLeft = 0
-        self.falling = False
-        self.midair = False
-        self.level = None
-
-    def move(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2):
-        if self.moved <= 0:
-            if kLeftTemp1 or kRightTemp2:
-                self.leftRight = 1
-            if kRightTemp1 or kLeftTemp2:
-                self.leftRight = 2
-            if not(kLeft or kRight):
-                self.leftRight = 0
-            if self.leftRight == 2:
-                if self.runCycleRight <= 9:
-                    self.runCycleRight += 1
-                else:
-                    self.runCycleRight = 1
-                if 1 <= self.runCycleRight <= 5:
-                    self.image = pygame.image.load('assets/bariowalk1.png')
-                elif 6 <= self.runCycleRight <= 10:
-                    self.image = pygame.image.load('assets/bariowalk2.png')
-                if self.moved == 0:
-                    self.image = pygame.image.load('assets/barioflip.png')
-                self.change_x -= 10
-            if self.leftRight == 1:
-                if self.runCycleLeft <= 9:
-                    self.runCycleLeft += 1
-                else:
-                    self.runCycleLeft = 1
-                if 1 <= self.runCycleLeft <= 5:
-                    self.image = pygame.image.load('assets/barioflipwalk1.png')
-                elif 6 <= self.runCycleLeft <= 10:
-                    self.image = pygame.image.load('assets/barioflipwalk2.png')
-                if self.moved == 0:
-                    self.image = pygame.image.load('assets/barioflip.png')
-                self.change_x += 10
-
-        hitList = pygame.sprite.spritecollide(self, self.level.obstacle_list, False)
-        for block in hitList:
-            if self.change_x > 0:
-                self.rect.right = block.rect.left
-            if self.change_x < 0:
-                self.rect.left = block.rect.right
-
-        self.moved += self.change_x
-        if self.moved >= 0:
-            self.moved = 0
-
-    def standSprite(self):
-        if self.leftRight == 1:
-            self.image = pygame.image.load('assets/barioflip.png')
-        elif self.leftRight == 2:
-            self.image = pygame.image.load('assets/bario.png')
-        self.runCycleRight = 0
-        self.runCycleLeft = 0
-
-    def jump(self, kUp, obstacle_list):
-        if self.rect.y <= 100:
-            self.falling = True
-        if kUp and not self.falling:
-            self.change_y = -10
-        if not kUp:
-            self.falling = True
-        if self.rect.y >= 400:
-            self.falling = False
-        if self.falling:
-            self.change_y = 10
-        hitList = pygame.sprite.spritecollide(self, self.level.obstacle_list, False)
-        hit = False
-        for block in hitList:
-            hit = True
-            if self.change_y > 0:
-                self.rect.bottom = block.rect.top
-            elif self.change < 0:
-                self.rect.top = block.rect.bottom
-            self.change_y = 0
-        if not hit:
-            self.midair = True
-        else:
-            self.midair = False
-        if self.midair:
-            self.standSprite()
-
-    def update(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2, kUp, obstacle_list):
-        if kLeft or kRight:
-            player.move(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2)
-        else:
-            player.standSprite()
-        self.jump(kUp, obstacle_list)
-
-class Player(pygame.sprite.Sprite):
-
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load('assets/bario.png')
-        self.rect = self.image.get_rect()
-        self.rect.x = 650
-        self.rect.y = 400
         self.change_x = 0
         self.change_y = 0
         self.leftRight = 0
@@ -146,40 +41,20 @@ class Player(pygame.sprite.Sprite):
         self.level = None
 
     def update(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2):
-        """ Move the player. """
-        # Gravity
         self.calc_grav()
 
-        self.move(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2):
+        self.move(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2)
 
-        # Move left/right
-        self.rect.x += self.change_x
-
-        # See if we hit anything
-        block_hit_list = pygame.sprite.spritecollide(self, self.level.obstacle_list, False)
-        for block in block_hit_list:
-            # If we are moving right,
-            # set our right side to the left side of the item we hit
-            if self.change_x > 0:
-                self.rect.right = block.rect.left
-            elif self.change_x < 0:
-                # Otherwise if we are moving left, do the opposite.
-                self.rect.left = block.rect.right
-
-        # Move up/down
         self.rect.y += self.change_y
 
-        # Check and see if we hit anything
-        block_hit_list = pygame.sprite.spritecollide(self, self.level.obstacleList, False)
+        block_hit_list = pygame.sprite.spritecollide(self, self.level.obstacle_list, False)
         for block in block_hit_list:
 
-            # Reset our position based on the top/bottom of the object.
             if self.change_y > 0:
                 self.rect.bottom = block.rect.top
             elif self.change_y < 0:
                 self.rect.top = block.rect.bottom
 
-            # Stop our vertical movement
             self.change_y = 0
 
     def move(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2):
@@ -187,6 +62,7 @@ class Player(pygame.sprite.Sprite):
             self.leftRight = 1
         if kRightTemp1 or kLeftTemp2:
             self.leftRight = 2
+        self.standSprite(kRightTemp2, kLeftTemp2)
         if not(kLeft or kRight):
             self.leftRight = 0
         if self.leftRight == 2:
@@ -198,7 +74,8 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.image.load('assets/bariowalk1.png')
             elif 6 <= self.runCycleRight <= 10:
                 self.image = pygame.image.load('assets/bariowalk2.png')
-            self.change_x -= 10
+            self.change_x = -10
+            self.rect.x += 10
         if self.leftRight == 1:
             if self.runCycleLeft <= 9:
                 self.runCycleLeft += 1
@@ -208,26 +85,45 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.image.load('assets/barioflipwalk1.png')
             elif 6 <= self.runCycleLeft <= 10:
                 self.image = pygame.image.load('assets/barioflipwalk2.png')
-            self.change_x += 10
+            self.change_x = 10
+            self.rect.x -= 10
+        if not(kLeft or kRight):
+            self.change_x = 0
+        block_hit_list = pygame.sprite.spritecollide(self, self.level.obstacle_list, False)
+        for block in block_hit_list:
+            if self.change_x < 0:
+                self.rect.right = block.rect.left
+                self.change_x = 0
+            elif self.change_x > 0:
+                self.rect.left = block.rect.right
+                self.change_x = 0
+        if self.leftRight == 1:
+            self.rect.x += 10
+        if self.leftRight == 2:
+            self.rect.x -= 10
+
+    def standSprite(self, kRightTemp2, kLeftTemp2):
+        if self.leftRight == 1 or (self.leftRight == 2 and kRightTemp2):
+            self.image = pygame.image.load('assets/barioflip.png')
+        if (self.leftRight == 2 and not kRightTemp2) or (self.leftRight == 1 and kLeftTemp2):
+            self.image = pygame.image.load('assets/bario.png')
 
     def calc_grav(self):
-        """ Calculate effect of gravity. """
         if self.change_y == 0:
             self.change_y = 1
         else:
             self.change_y += .35
 
-        # See if we are on the ground.
-        if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
+        if self.rect.y >= 700 - self.rect.height and self.change_y >= 0:
             self.change_y = 0
-            self.rect.y = SCREEN_HEIGHT - self.rect.height
+            self.rect.y = 700 - self.rect.height
 
     def jump(self):
         self.rect.y += 2
-        platform_hit_list = pygame.sprite.spritecollide(self, self.level.obstacleList, False)
+        platform_hit_list = pygame.sprite.spritecollide(self, self.level.obstacle_list, False)
         self.rect.y -= 2
 
-        if len(platform_hit_list) > 0 or self.rect.bottom >= SCREEN_HEIGHT:
+        if len(platform_hit_list) > 0:
             self.change_y = -10
 
 #enemy class
@@ -273,8 +169,7 @@ class Platform(pygame.sprite.Sprite):
         self.deSpawn()
 
 #pause screen
-def Pause_screen():
-    global pause
+def Pause_screen(screen, clock):
     pygame.event.clear()
     image = pygame.image.load('assets/pause.png')
     screen.blit(image, [0, 0])
@@ -286,20 +181,22 @@ def Pause_screen():
 
 #level super class
 class Level():
-    def __init__(self, player):
+    def __init__(self, player, screen):
         self.obstacle_list = pygame.sprite.Group()
         self.enemy_list = pygame.sprite.Group()
         self.player = player
         self.worldShift = 0
-        self.levelLimit = -1000
+        self.level_limit = -1000
+        self.screen = screen
 
-    def update(self):
+    def update(self, shiftX):
         self.obstacle_list.update()
         self.enemy_list.update()
+        self.shiftWorld(shiftX)
 
     def draw(self):
-        self.obstacle_list.draw()
-        self.enemy_list.draw()
+        self.obstacle_list.draw(self.screen)
+        self.enemy_list.draw(self.screen)
 
     def shiftWorld(self, shiftX):
         self.worldShift += shiftX
@@ -310,21 +207,21 @@ class Level():
 
 #level 1
 class Level_01(Level):
-    def __init__(self, player):
-        Level.__init__(self, player):
-        self.levelLimit = -2150
-        level = [[2100, -1500],
-                 [500, 800],
-                 [200, 1500],
-                 [800, 1900]]
+    def __init__(self, player, screen):
+        Level.__init__(self, player, screen)
+        self.level_limit = -2450
+        level = [[2400, -1500],
+                 [500, 1100],
+                 [200, 1800],
+                 [800, 2200]]
         for platform in level:
             block = Platform(platform[0], platform[1])
             self.obstacle_list.add(block)
 
 class Level_02(Level):
-    def __init__(self, player):
-        Level.__init__(self, player):
-        self.levelLimit = -2150
+    def __init__(self, player, screen):
+        Level.__init__(self, player, screen)
+        self.level_limit = -2150
         level = [[500, 800],
                  [300, 1900],
                  [200, 1500],
