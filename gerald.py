@@ -8,17 +8,6 @@
 import pygame
 from classes import *
 
-#define colors
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
-RED =  (255, 0, 0)
-BLUE = (0, 0, 255)
-LIGHT_BLUE = (146, 144, 255)
-YELLOW = (255, 255, 0)
-GREEN = (0, 255, 0)
-PURPLE = (255, 0, 255)
-ORANGE =  (255, 127, 0)
-
 #initialize game engine
 pygame.init()
 
@@ -48,7 +37,9 @@ pause = False
 #loop until user clicks close button
 done = False
 
-while done == False:
+mainmenu = MainMenu()
+
+while not done:
     #event processing
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
