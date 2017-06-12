@@ -6,26 +6,12 @@
 import pygame
 pygame.init()
 
-# Set Colour Variables
-white = (255,255,255)
-red = (255,0,0)
-sky = (146,144,255)
-
 # Set Screen
 size = (1300,700)
 screen = pygame.display.set_mode(size)
 
 # Clock
 clock = pygame.time.Clock()
-
-# Boolean Stuff
-done = False
-keyPressed = False
-menuScreen = False
-whichButton = 1
-keyDown = False
-creditScreen = False
-#MOVED BOOLEAN STUFF UP HERE
 
 # Sprite Thing
 class Play(pygame.sprite.Sprite):
@@ -36,7 +22,7 @@ class Play(pygame.sprite.Sprite):
        self.rect.x = 340
        self.rect.y = 400
 
-class MainMenuBG(pygame.sprite.Sprite):
+class MainMenu(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
        self.image = pygame.image.load ('assets/text/nohighscore.png')
@@ -62,59 +48,131 @@ class MainMenuArrows(pygame.sprite.Sprite):
        elif whichButton % 4 == 3:
             self.image = pygame.image.load('assets/text/exitarrow.png')
 
-class MainMenu ():
+class Credits(pygame.sprite.Sprite):
     def __init__(self):
-        while not done:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    done = True
-            if keyPressed == False:
-                if event.type == pygame.KEYDOWN:
-                    keyPressed = True
-                    menuScreen = True
-            if menuScreen:
-                pygame.draw.rect(screen,sky,[340,400,615,25],0)
-                if event.type == pygame.KEYDOWN:
-                    if keyDown == False:
-                        if event.key == pygame.K_DOWN:
-                            whichButton += 1
-                            keyDown = True
-                        if event.key == pygame.K_UP:
-                            whichButton -= 1
-                            keyDown = True
-                        if event.key == pygame.K_RETURN and whichButton % 4 == 3:
-                            done = True
-                        if event.key == pygame.K_RETURN and whichButton % 4 == 2:
-                            mainScreen = False
-                            creditScreen = True
-                if event.type == pygame.KEYUP:
-                    keyDown = False
-                menu.update(whichButton)
-                menu.draw(screen)
-            else:
-                playGroup.draw(screen)
-            pygame.display.flip()
-            screen.blit(bg, [0, 0])
-            clock.tick(60)
+       pygame.sprite.Sprite.__init__(self)
+       self.image = pygame.image.load ('assets/text/credit.png')
+       self.rect = self.image.get_rect()
+       self.rect.x = 450
+       self.rect.y = 310
 
-mainMenu = MainMenu() #I ADDED THIS THINGY IS THIS RIGHT
+class Instructions(pygame.sprite.Sprite):
+    def __init__(self):
+       pygame.sprite.Sprite.__init__(self)
+       self.image = pygame.image.load ('assets/instruction1.png')
+       self.rect = self.image.get_rect()
+       self.rect.x = 0
+       self.rect.y = 0
+
+    def update(self, slide):
+        if slide % 3 == 0:
+            self.image = pygame.image.load('assets/instruction1.png')
+        elif slide % 3 == 1:
+            self.image = pygame.image.load('assets/instruction2.png')
+        elif slide % 3 == 2:
+            self.image = pygame.image.load('assets/instruction3.png')
+
+instructions = Instructions()
+credit = Credits()
 mainMenuArrows = MainMenuArrows()
-mainMenuBG = MainMenuBG()
+mainMenu = MainMenu()
 play = Play()
 
-playGroup = pygame.sprite.GroupSingle() #group
-menu = pygame.sprite.Group() #group
-menu.add(mainMenuBG) #menu bg
-menu.add(mainMenuArrows) #arrows
-menu.add(mainMenu) #I ADDED THIS TO THE MENU GROUP PLS TO CHECK
-playGroup.add(play) #press any key
+playGroup = pygame.sprite.GroupSingle()
+creditGroup = pygame.sprite.GroupSingle()
+instruction = pygame.sprite.Group()
+menu = pygame.sprite.Group()
 
-# Set a Background
+menu.add(mainMenu) #menu bg
+menu.add(mainMenuArrows) #arrows
+playGroup.add(play) #press any key
+creditGroup.add(credit)
+instruction.add(instructions)
+
+# Backgrounds
 bg = pygame.image.load ('assets/mainmenu.png')
 
 # Display Graphics
 pygame.display.flip()
 
+# Boolean Stuff
+instructionScreen = False
+creditScreen = False
+done = False
+keyPressed = False
+menuScreen = False
+slide = 0
+whichButton = 0
+keyDown = False
+
 # Game Loop
-#HOW DO I CALL THE MAIN MENU THING
+while not done:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+
+# Start Screen
+    if not keyPressed:
+        playGroup.draw(screen)
+        if event.type == pygame.KEYDOWN:
+            keyPressed = True
+            menuScreen = True
+
+# Main Menu
+    if menuScreen:
+        if event.type == pygame.KEYDOWN:
+            if not keyDown:
+                if event.key == pygame.K_DOWN:
+                    whichButton += 1
+                if event.key == pygame.K_UP:
+                    whichButton -= 1
+                if event.key == pygame.K_RETURN:
+                    if whichButton % 4 == 3:
+                        done = True
+                    if whichButton % 4 == 2:
+                        menuScreen = False
+                        creditScreen = True
+                    if whichButton % 4 == 1:
+                        menuScreen = False
+                        instructionScreen = True
+                keyDown = True
+        if event.type == pygame.KEYUP:
+            keyDown = False
+        menu.update(whichButton)
+        menu.draw(screen)
+
+# Credit Screen
+    if creditScreen:
+        creditGroup.draw(screen)
+        if event.type == pygame.KEYUP:
+            keyDown = False
+        if not keyDown:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    creditScreen = False
+                    menuScreen = True
+
+# Instruction Screen
+    if instructionScreen:
+        instruction.draw(screen)
+        if event.type == pygame.KEYDOWN:
+            if not keyDown:
+                if event.key == pygame.K_RIGHT:
+                    slide += 1
+                if event.key == pygame.K_LEFT:
+                    slide -= 1
+                if event.key == pygame.K_ESCAPE:
+                    instructionScreen = False
+                    menuScreen = True
+                    slide = 0
+            keyDown = True
+        if event.type == pygame.KEYUP:
+            keyDown = False
+        instruction.update(slide)
+
+                    
+# Stuff
+    pygame.display.flip()
+    screen.blit(bg, [0, 0])
+    clock.tick(60)
 pygame.quit()
