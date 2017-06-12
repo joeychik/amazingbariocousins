@@ -129,6 +129,7 @@ while not done:
         if event.type == pygame.KEYDOWN:
             keyPressed = True
             menuScreen = True
+            keyDown = True
 
 # Main Menu
     if menuScreen:
@@ -193,6 +194,8 @@ while not done:
                 if event.key == pygame.K_ESCAPE:
                     charScreen = False
                     menuScreen = True
+                if event.key == pygame.K_RETURN:
+                    done = True #PUT UR THINGY HERE
                     
 # Stuff
     pygame.display.flip()
