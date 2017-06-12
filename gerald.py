@@ -32,8 +32,6 @@ kLeftTemp2 = False
 kRightTemp2 = False
 kUpTemp2 = False
 
-pause = False
-
 #loop until user clicks close button
 done = False
 
@@ -58,7 +56,8 @@ while not done:
                 kUp = True
                 kUpTemp1 = True
             if event.key == pygame.K_p:
-                pause == True
+                pause = True
+                Pause_screen()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_LEFT:
                 kLeft = False
@@ -70,20 +69,8 @@ while not done:
                 kUp = False
                 kUpTemp2 = False
 
-    #game logic
-
-    worldScroll = player.moved
-
     #move player
-    playergroup.update(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2, kUp, obstacle_list)
-
-    #pause loop
-    if pause:
-        Pause_screen()
-
-    #update position of everything that moved
-    enemy_list.update(worldScroll)
-    obstacle_list.update(worldScroll)
+    player.update(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2, kUp, obstacle_list)
 
     #reset temporary variables
     kLeftTemp1 = False
