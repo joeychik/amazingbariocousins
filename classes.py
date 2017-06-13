@@ -264,5 +264,22 @@ class Level_03(Level):
             self.enemy_list.add(enemy)
             enemy.player = self.player
 
+class Level_04(Level):
+    def __init__(self, player, screen):
+        Level.__init__(self, player, screen)
+        self.level_limit = -2456
+        level = [[2400, -1500],
+                 [500, 1100],
+                 [200, 1800],
+                 [2000, 2200]]
+        levelEnemy = [1700, 2700]
+        for platform in level:
+            block = Platform(platform[0], platform[1])
+            self.obstacle_list.add(block)
+        for boomba in levelEnemy:
+            enemy = Enemy(boomba, self.obstacle_list)
+            self.enemy_list.add(enemy)
+            enemy.player = self.player
+
 #create player object
 player = Player()

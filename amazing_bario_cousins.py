@@ -22,6 +22,8 @@ def mainProgLoop():
     level_list = []
     level_list.append(Level_01(player, screen))
     level_list.append(Level_02(player, screen))
+    level_list.append(Level_03(player, screen))
+    level_list.append(Level_04(player, screen))
 
     current_level_no = 0
     current_level = level_list[current_level_no]
