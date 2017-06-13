@@ -243,9 +243,9 @@ class Level_02(Level):
             block = Platform(platform[0], platform[1])
             self.obstacle_list.add(block)
         for boomba in levelEnemy:
-            enemy = Enemy(boomba)
+            enemy = Enemy(boomba, self.obstacle_list)
             self.enemy_list.add(enemy)
-            enemy.obstacle_list = self.obstacle_list
+            enemy.player = self.player
 
 class Level_03(Level):
     def __init__(self, player, screen):
@@ -260,9 +260,9 @@ class Level_03(Level):
             block = Platform(platform[0], platform[1])
             self.obstacle_list.add(block)
         for boomba in levelEnemy:
-            enemy = Enemy(boomba)
+            enemy = Enemy(boomba, self.obstacle_list)
             self.enemy_list.add(enemy)
-            enemy.obstacle_list = self.obstacle_list
+            enemy.player = self.player
 
 #create player object
 player = Player()
