@@ -60,11 +60,20 @@ class Instructions(pygame.sprite.Sprite):
         elif self.slide % 3 == 2:
             self.image = pygame.image.load('assets/instruction3.png')
 
+class CharSelect(pygame.sprite.Sprite):
+    def __init__(self):
+       pygame.sprite.Sprite.__init__(self)
+       self.image = pygame.image.load ('assets/charactersel.png')
+       self.rect = self.image.get_rect()
+       self.rect.x = 0
+       self.rect.y = 0
+
 def MainMenu(screen, clock):
     done = False
     menuScreen = False
     creditScreen = False
     instructionScreen = False
+    charScreen = False
     keyPressed = False
     keyDown = False
     whichButton = 1
@@ -75,13 +84,16 @@ def MainMenu(screen, clock):
     credit = Credits()
     play = PressKeyToStart()
     instructions = Instructions()
+    selection = CharSelect()
     creditGroup = pygame.sprite.GroupSingle()
     menu = pygame.sprite.Group()
     instruction = pygame.sprite.Group()
+    selectGroup = pygame.sprite.GroupSingle()
     menu.add(mainMenuText)
     menu.add(mainMenuArrows)
     creditGroup.add(credit)
     instruction.add(instructions)
+    selectGroup.add (selection)
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -92,6 +104,7 @@ def MainMenu(screen, clock):
                 pygame.event.clear()
                 keyPressed = True
                 menuScreen = True
+                keyDown = True
         if menuScreen:
             pygame.draw.rect(screen, (146, 144, 255), [340,400,615,25], 0)
             if event.type == pygame.KEYDOWN:
@@ -104,7 +117,8 @@ def MainMenu(screen, clock):
                         keyDown = True
                     if event.key == pygame.K_RETURN:
                         if whichButton % 4 == 0:
-                            done = True
+                            menuScreen = False
+                            charScreen = True
                         if whichButton % 4 == 1:
                             menuScreen = False
                             instructionScreen = True
@@ -113,6 +127,7 @@ def MainMenu(screen, clock):
                             creditScreen = True
                         if whichButton % 4 == 3:
                             pygame.quit()
+                    keyDown = True
             if event.type == pygame.KEYUP:
                 keyDown = False
             mainMenuArrows.update(whichButton)
@@ -145,6 +160,17 @@ def MainMenu(screen, clock):
             if event.type == pygame.KEYUP:
                 keyDown = False
             instruction.update()
+        if charScreen:
+            selectGroup.draw(screen)
+            if event.type == pygame.KEYUP:
+                keyDown = False
+            if not keyDown:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        charScreen = False
+                        menuScreen = True
+                    if event.key == pygame.K_RETURN:
+                        done = True
         pygame.display.flip()
         screen.blit(bg, [0, 0])
         clock.tick(60)

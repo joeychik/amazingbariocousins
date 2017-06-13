@@ -41,6 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.level = None
 
     def update(self, kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2):
+        self.mask = pygame.mask.from_surface(self.image)
         self.calc_grav()
 
         self.move(kLeft, kRight, kLeftTemp1, kLeftTemp2, kRightTemp1, kRightTemp2)
@@ -93,30 +94,25 @@ class Player(pygame.sprite.Sprite):
         for block in block_hit_list:
             if self.change_x < 0:
                 self.rect.right = block.rect.left
-                self.change_x = 0
             elif self.change_x > 0:
                 self.rect.left = block.rect.right
-                self.change_x = 0
+            self.change_x = 0
         if self.leftRight == 1:
             self.rect.x += 10
         if self.leftRight == 2:
             self.rect.x -= 10
 
     def standSprite(self, kRightTemp2, kLeftTemp2):
-        if self.leftRight == 1 or (self.leftRight == 2 and kRightTemp2):
+        if self.leftRight == 1 or (self.leftRight == 2 and kLeftTemp2):
             self.image = pygame.image.load('assets/barioflip.png')
-        if (self.leftRight == 2 and not kRightTemp2) or (self.leftRight == 1 and kLeftTemp2):
+        if (self.leftRight == 2 and not kLeftTemp2) or (self.leftRight == 1 and kRightTemp2):
             self.image = pygame.image.load('assets/bario.png')
 
     def calc_grav(self):
         if self.change_y == 0:
             self.change_y = 1
         else:
-            self.change_y += .35
-
-        if self.rect.y >= 700 - self.rect.height and self.change_y >= 0:
-            self.change_y = 0
-            self.rect.y = 700 - self.rect.height
+            self.change_y += 1.2
 
     def jump(self):
         self.rect.y += 2
@@ -124,27 +120,54 @@ class Player(pygame.sprite.Sprite):
         self.rect.y -= 2
 
         if len(platform_hit_list) > 0:
-            self.change_y = -10
+            self.change_y = -25
+
+    def enemyHit(self):
+        enemy_hit_list = pygame.sprite.spritecollide(self, self.level.enemy_list, False, pygame.sprite.collide_mask)
+        if len(enemy_hit_list) > 0 or self.rect.top > 730:
+            return True
 
 #enemy class
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, xPos):
+    def __init__(self, xPos, obstacle_list):
         super().__init__()
         self.image = pygame.image.load('assets/boomba.png')
         self.rect = self.image.get_rect()
         self.rect.x = xPos
-        self.rect.y = 400
-        self.movex = 0
-        self.speed = 3
-
-    def moveleft(self):
-        self.movex -= self.speed
+        self.rect.y = 300
+        self.change_x = -3
+        self.change_y = 0
+        self.obstacle_list = obstacle_list
+        self.player = None
 
     def update(self):
-        self.moveleft()
-        if self.rect.x == -300:
+        self.mask = pygame.mask.from_surface(self.image)
+        if self.rect.x - self.player.rect.x <= 660:
+            self.rect.x += self.change_x
+        self.calc_grav()
+
+        block_hit_list = pygame.sprite.spritecollide(self, self.obstacle_list, False)
+        for block in block_hit_list:
+            if self.change_x  != 0 and self.rect.bottom > 410:
+                self.rect.left = block.rect.right
+
+        self.rect.y += self.change_y
+
+        block_hit_list = pygame.sprite.spritecollide(self, self.obstacle_list, False)
+        for block in block_hit_list:
+
+            if self.change_y != 0:
+                self.rect.bottom = block.rect.top - 1
+
+            self.change_y = 0
+        if self.rect.x < -300 or self.rect.top > 710:
             self.kill()
 
+    def calc_grav(self):
+        if self.change_y == 0:
+            self.change_y = 1
+        else:
+            self.change_y += 1.2
 
 #level platform sprite
 class Platform(pygame.sprite.Sprite):
@@ -158,33 +181,10 @@ class Platform(pygame.sprite.Sprite):
 
     def deSpawn(self):
         if self.rect.x < -2848:
-            '''
-            platform = Platform(self.startPos - 2048)
-            obstacle_list.add(platform)
-            sprite_list.add(platform)
-            '''
             self.kill()
 
     def update(self):
         self.deSpawn()
-
-#pause screen
-def unpause():
-    global pause
-    pause = False
-
-def Pause_screen(screen, clock):
-    pygame.event.clear()
-    image = pygame.image.load('assets/pause.png')
-    while pause:
-        screen.blit(image, [0, 0])
-        
-        for event in pygame.event.get():
-            if event.key == pygame.K_c: unpause()
-            #if event.key == pygame.K_m:
-
-        pygame.display.flip()
-        clock.tick(60)
 
 #level super class
 class Level():
@@ -216,30 +216,36 @@ class Level():
 class Level_01(Level):
     def __init__(self, player, screen):
         Level.__init__(self, player, screen)
-        self.level_limit = -2450
+        self.level_limit = -2456
         level = [[2400, -1500],
                  [500, 1100],
                  [200, 1800],
-                 [800, 2200]]
+                 [2000, 2200]]
+        levelEnemy = [1700, 2700]
         for platform in level:
             block = Platform(platform[0], platform[1])
             self.obstacle_list.add(block)
+        for boomba in levelEnemy:
+            enemy = Enemy(boomba, self.obstacle_list)
+            self.enemy_list.add(enemy)
+            enemy.player = self.player
 
 class Level_02(Level):
     def __init__(self, player, screen):
         Level.__init__(self, player, screen)
         self.level_limit = -2150
-        level = [[500, 800],
-                 [300, 1900],
-                 [200, 1500],
-                 [2100, -1500]]
+        level = [[500, 1500],
+                 [300, 2600],
+                 [1350, 2200],
+                 [2800, -1500]]
+        levelEnemy = []
         for platform in level:
             block = Platform(platform[0], platform[1])
             self.obstacle_list.add(block)
+        for boomba in levelEnemy:
+            enemy = Enemy(boomba)
+            self.enemy_list.add(enemy)
+            enemy.obstacle_list = self.obstacle_list
 
 #create player object
 player = Player()
-
-#create enemy objects
-enemy = Enemy(900)
-enemy_list.add(enemy)

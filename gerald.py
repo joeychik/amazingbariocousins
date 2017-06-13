@@ -32,6 +32,10 @@ def mainProgLoop():
     clock = pygame.time.Clock()
 
     #initialize necessary variables
+    winScreen = pygame.image.load('assets/winScreen.png')
+    loseScreen = pygame.image.load('assets/loseScreen.png')
+    lose = False
+    pause = False
     kLeft = False
     kRight = False
     kUp = False
@@ -44,8 +48,14 @@ def mainProgLoop():
     kRightTemp2 = False
     kUpTemp2 = False
 
+    goToMainMenu = False
+
     #loop until user clicks close button
     done = False
+
+    #add music
+    pygame.mixer.music.load('assets/music/theme.wav')
+    pygame.mixer.music.play(-1)
 
     #run main menu
     MainMenu(screen, clock)
@@ -74,14 +84,7 @@ def mainProgLoop():
 
                     pygame.event.clear()
                     image = pygame.image.load('assets/pause.png')
-                    while pause:
-                        screen.blit(image, [0, 0])
-                        for event in pygame.event.get():
-                            if event.key == pygame.K_c: pause = False
-                            #if event.key == pygame.K_m:
-
-                        pygame.display.flip()
-                        clock.tick(60)
+                    screen.blit(image, [0, 0])
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
@@ -99,15 +102,49 @@ def mainProgLoop():
 
         current_level.update(player.change_x)
 
+        if player.enemyHit():
+            screen.blit(loseScreen, [0, 0])
+            pause = True
+            lose = True
+
+        while pause:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if lose:
+                        if event.key == pygame.K_m:
+                            pause = False
+                            done = True
+                            goToMainMenu = True
+                        if event.key == pygame.K_ESCAPE:
+                            pause = False
+                            done = True
+                    else:
+                        if event.key == pygame.K_c or event.key == pygame.K_p: pause = False
+                        if event.key == pygame.K_m:
+                            pause = False
+                            done = True
+                            goToMainMenu = True
+
+                pygame.display.flip()
+                clock.tick(60)
+
         if current_level.worldShift < current_level.level_limit:
             if current_level_no < len(level_list)-1:
-                player.rect.x = 120
+                player.rect.x = 650
                 current_level_no += 1
                 current_level = level_list[current_level_no]
                 player.level = current_level
             else:
-                # Out of levels. This just exits the program.
-                # You'll want to do something better.
+                winScreenBool = True
+                while winScreenBool:
+                    screen.blit(winScreen, [0, 0])
+
+                    for event in pygame.event.get():
+                        if event.type == pygame.KEYDOWN:
+                            if event.key == pygame.K_RETURN: winScreenBool = False
+
+                    pygame.display.flip()
+                    clock.tick(20)
                 done = True
 
         #reset temporary variables
@@ -129,6 +166,9 @@ def mainProgLoop():
 
         #limit framerate
         clock.tick(60)
-    pygame.quit()
+    if goToMainMenu:
+        mainProgLoop()
+    else:
+        pygame.quit()
 
 mainProgLoop()
