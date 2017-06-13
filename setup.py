@@ -9,8 +9,9 @@ build_exe_options = {"build_exe":"../dist", "include_files": ["assets/music/them
                  'assets/barioflipwalk1.png', 'assets/barioflipwalk2.png',
                  'assets/bariowalk1.png', 'assets/bariowalk2.png',
                  'assets/boomba.png', 'assets/bricktemplate.png', 'assets/charactersel.png',
+                 'assets/instruction1.png', 'assets/instruction2.png', 'assets/instruction3.png',
                  'assets/loseScreen.png', 'assets/mainmenu.png',
-                 'assets/pause.png', 'assets/winScreen.png']}
+                 'assets/pause.png', 'assets/winScreen.png', 'assets/text/nohighscore.png']}
 
 # GUI applications require a different base on Windows (the default is for a
 # console application).

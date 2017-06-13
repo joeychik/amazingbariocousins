@@ -4,7 +4,7 @@ import pygame
 class PressKeyToStart(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('assets/text/presskey.png')
+       self.image = pygame.image.load ('presskey.png')
        self.rect = self.image.get_rect()
        self.rect.x = 340
        self.rect.y = 400
@@ -12,7 +12,7 @@ class PressKeyToStart(pygame.sprite.Sprite):
 class MainMenuText(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('assets/text/nohighscore.png')
+       self.image = pygame.image.load ('nohighscore.png')
        self.rect = self.image.get_rect()
        self.rect.x = 510
        self.rect.y = 350
@@ -20,25 +20,25 @@ class MainMenuText(pygame.sprite.Sprite):
 class MainMenuArrows(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('assets/text/playarrow.png')
+       self.image = pygame.image.load ('playarrow.png')
        self.rect = self.image.get_rect()
        self.rect.x = 462
        self.rect.y = 350
 
     def update(self, whichButton):
        if whichButton % 4 == 0:
-            self.image = pygame.image.load('assets/text/playarrow.png')
+            self.image = pygame.image.load('playarrow.png')
        elif whichButton % 4 == 1:
-            self.image = pygame.image.load('assets/text/instructionarrow.png')
+            self.image = pygame.image.load('instructionarrow.png')
        elif whichButton % 4 == 2:
-            self.image = pygame.image.load('assets/text/creditsarrow.png')
+            self.image = pygame.image.load('creditsarrow.png')
        elif whichButton % 4 == 3:
-            self.image = pygame.image.load('assets/text/exitarrow.png')
+            self.image = pygame.image.load('exitarrow.png')
 
 class Credits(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('assets/text/credit.png')
+       self.image = pygame.image.load ('credit.png')
        self.rect = self.image.get_rect()
        self.rect.x = 450
        self.rect.y = 310
@@ -46,7 +46,7 @@ class Credits(pygame.sprite.Sprite):
 class Instructions(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('assets/instruction1.png')
+       self.image = pygame.image.load ('instruction1.png')
        self.rect = self.image.get_rect()
        self.rect.x = 0
        self.rect.y = 0
@@ -54,16 +54,16 @@ class Instructions(pygame.sprite.Sprite):
 
     def update(self):
         if self.slide % 3 == 0:
-            self.image = pygame.image.load('assets/instruction1.png')
+            self.image = pygame.image.load('instruction1.png')
         elif self.slide % 3 == 1:
-            self.image = pygame.image.load('assets/instruction2.png')
+            self.image = pygame.image.load('instruction2.png')
         elif self.slide % 3 == 2:
-            self.image = pygame.image.load('assets/instruction3.png')
+            self.image = pygame.image.load('instruction3.png')
 
 class CharSelect(pygame.sprite.Sprite):
     def __init__(self):
        pygame.sprite.Sprite.__init__(self)
-       self.image = pygame.image.load ('assets/charactersel.png')
+       self.image = pygame.image.load ('charactersel.png')
        self.rect = self.image.get_rect()
        self.rect.x = 0
        self.rect.y = 0
@@ -77,7 +77,7 @@ def MainMenu(screen, clock):
     keyPressed = False
     keyDown = False
     whichButton = 1
-    bg = pygame.image.load('assets/mainmenu.png')
+    bg = pygame.image.load('mainmenu.png')
     mainMenuArrows = MainMenuArrows()
     mainMenuText = MainMenuText()
     pressKeyToStart = PressKeyToStart()

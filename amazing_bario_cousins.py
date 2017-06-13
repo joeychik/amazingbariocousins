@@ -32,8 +32,8 @@ def mainProgLoop():
     clock = pygame.time.Clock()
 
     #initialize necessary variables
-    winScreen = pygame.image.load('assets/winScreen.png')
-    loseScreen = pygame.image.load('assets/loseScreen.png')
+    winScreen = pygame.image.load('winScreen.png')
+    loseScreen = pygame.image.load('loseScreen.png')
     lose = False
     pause = False
     kLeft = False
@@ -54,7 +54,7 @@ def mainProgLoop():
     done = False
 
     #add music
-    pygame.mixer.music.load('assets/music/theme.wav')
+    pygame.mixer.music.load('theme.wav')
     pygame.mixer.music.play(-1)
 
     #run main menu
@@ -83,7 +83,7 @@ def mainProgLoop():
                     pause = True
 
                     pygame.event.clear()
-                    image = pygame.image.load('assets/pause.png')
+                    image = pygame.image.load('pause.png')
                     screen.blit(image, [0, 0])
 
             if event.type == pygame.KEYUP:
